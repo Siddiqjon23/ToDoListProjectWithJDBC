@@ -1,8 +1,10 @@
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class Controller {
+    TaskRepository taskRepository = new TaskRepository();
     public void start(){
         DatabaseUtil.createTable();
         boolean t = true;
@@ -13,10 +15,21 @@ public class Controller {
             switch (switchCommand){
                 case 1:
                     AddTask();
+                    break;
+                case 2 :
+                    getAllTasks();
+                    break;
+                case 3:
+                    finishedTasks();
+                    break;
 
                 }
             }
         }
+
+    private void finishedTasks() {
+         var tasks = taskRepository.getAllFinishedTasks();
+    }
 
     private void AddTask() {
         Scanner scanner = new Scanner(System.in);
@@ -35,13 +48,31 @@ public class Controller {
         taskDTO.setCreatedAt(LocalDateTime.now());
         taskDTO.setFinishedAt(null);
 
-        TaskRepository taskRepository = new TaskRepository();
         taskRepository.saveTask(taskDTO);
 
+    }
+//    public void getAllTasks(){
+//        var tasks = taskRepository.getAllActiveTasks();
+//        for (TaskDTO taskDTO : tasks){
+//            System.out.println(taskDTO);
+//        }
+//    }
+public void getAllTasks() {
+    var tasks = taskRepository.getAllActiveTasks();
 
+    System.out.println("+-----------------+-----------------------------------+-----------------------------------------------------+");
+    System.out.printf("| %-15s | %-30s | %-10s | %-26s| %-10s|\n", "Title", "Content", "Status","CreatedAt","FinishedAt");
+    System.out.println("+-----------------+-----------------------------------+-----------------------------------------------------+");
+
+    for (TaskDTO taskDTO : tasks) {
+        System.out.printf("| %-15s | %-30s | %-10s | %-10s| %-10s|\n", taskDTO.getTitle(), taskDTO.getContent(), taskDTO.getStatus(),taskDTO.getCreatedAt(),taskDTO.getFinishedAt());
     }
 
-    public static void printMenu(){
+    System.out.println("+-----------------+-----------------------------------+------------------------------------------------------+");
+}
+
+
+    public  void printMenu(){
         System.out.println("***Assalomu alaykum****");
         System.out.println("1=>Add task");
         System.out.println("2=>Active task lists");

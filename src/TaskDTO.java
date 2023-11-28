@@ -48,4 +48,15 @@ public class TaskDTO {
     public void setFinishedAt(LocalDateTime finishedAt) {
         this.finishedAt = finishedAt;
     }
+
+    @Override
+    public String toString() {
+        return "TaskDTO{" +
+                "title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", finishedAt=" + finishedAt +
+                '}';
+    }
 }
