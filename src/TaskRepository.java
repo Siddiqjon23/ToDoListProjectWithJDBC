@@ -98,6 +98,19 @@ public class TaskRepository {
             throw new RuntimeException(e);
         }
     }
+    public Boolean update(int id, TaskDTO taskDTO){
+      boolean t = true;
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ToDoListProject", "user_db", "123456");
+            String sql = "update task set title = '%s',content = '%s' where id = %d";
+            Statement statement = connection.createStatement();
+            sql = String.format(sql,taskDTO.getTitle(),taskDTO.getContent(),id);
+            statement.executeUpdate(sql);
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public Boolean markAsdone(int id) {
      boolean t = true;

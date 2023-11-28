@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Controller {
     TaskRepository taskRepository = new TaskRepository();
     public void start(){
@@ -23,14 +24,42 @@ public class Controller {
                     finishedTasks();
                     break;
                 case 4:
+                    updateTask();
                     break;
                 case 5:
                     markAsDone();
                     break;
-
+                default:
+                    System.err.println("something went wrong ");
+                    break;
                 }
             }
         }
+
+    private void updateTask() {
+        Scanner scanner = new Scanner(System.in);
+        Scanner scanner1 = new Scanner(System.in);
+        TaskDTO taskDTO = new TaskDTO();
+
+        System.out.println("enter id : ");
+        int id = scanner.nextInt();
+
+
+        System.out.println("enter title :");
+        String title = scanner1.nextLine();
+
+        System.out.println("enter content");
+        String content = scanner1.nextLine();
+        taskDTO.setTitle(title);
+        taskDTO.setContent(content);
+
+      var isUpdated =   taskRepository.update(id,taskDTO);
+
+      if(isUpdated){
+          System.out.println("updated");
+      }
+
+    }
 
     private void markAsDone() {
         Scanner scanner = new Scanner(System.in);
@@ -38,6 +67,11 @@ public class Controller {
         int id = scanner.nextInt();
 
         var markAsdone = taskRepository.markAsdone(id);
+        if(markAsdone){
+            System.out.println("Marked as done");
+        }else {
+            System.out.println("something went wrong");
+        }
     }
 
     private void finishedTasks() {
