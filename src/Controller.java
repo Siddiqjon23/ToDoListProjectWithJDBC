@@ -22,14 +22,39 @@ public class Controller {
                 case 3:
                     finishedTasks();
                     break;
+                case 4:
+                    break;
+                case 5:
+                    markAsDone();
+                    break;
 
                 }
             }
         }
 
-    private void finishedTasks() {
-         var tasks = taskRepository.getAllFinishedTasks();
+    private void markAsDone() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("enter id :");
+        int id = scanner.nextInt();
+
+        var markAsdone = taskRepository.markAsdone(id);
     }
+
+    private void finishedTasks() {
+        var tasks = taskRepository.getAllFinishedTasks();
+
+        System.out.println("+-----------------+-----------------------------------+-----------------------------------------------------+");
+        System.out.printf("| %-15s | %-30s | %-10s | %-26s| %-10s|\n", "Title", "Content", "Status","CreatedAt","FinishedAt");
+        System.out.println("+-----------------+-----------------------------------+-----------------------------------------------------+");
+
+
+        for (TaskDTO taskDTO : tasks) {
+            System.out.printf("| %-15s | %-30s | %-10s | %-10s| %-10s|\n", taskDTO.getTitle(), taskDTO.getContent(), taskDTO.getStatus(),taskDTO.getCreatedAt(),taskDTO.getFinishedAt());
+        }
+
+        System.out.println("+-----------------+-----------------------------------+-----------------------------------------------------+");
+    }
+
 
     private void AddTask() {
         Scanner scanner = new Scanner(System.in);

@@ -67,7 +67,49 @@ public class TaskRepository {
   }
 
     public List<TaskDTO> getAllFinishedTasks() {
-      
+        List<TaskDTO> taskDTOS = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ToDoListProject", "user_db", "123456");
+        String sql = "select * from task where status = 'Done' ";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet values = preparedStatement.executeQuery();
+
+            while (values.next()) {
+                TaskDTO taskDTO = new TaskDTO();
+                taskDTO.setTitle(values.getString("title"));
+                taskDTO.setContent(values.getString("content"));
+                taskDTO.setStatus(TaskStatus.valueOf(values.getString("status")));
+
+                taskDTO.setCreatedAt(values.getTimestamp("createdAt").toLocalDateTime());
+
+                Timestamp finishedAtTimestamp = values.getTimestamp("finishedAt");
+                taskDTO.setFinishedAt(finishedAtTimestamp != null ? finishedAtTimestamp.toLocalDateTime() : null);
+
+                taskDTOS.add(taskDTO);
+
+            }
+            preparedStatement.close();
+            connection.close();
+            return taskDTOS;
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    public Boolean markAsdone(int id) {
+     boolean t = true;
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ToDoListProject", "user_db", "123456");
+            String sql = "update task set status = '%s', finishedAt = '%s' where id = %d";
+            Statement preparedStatement = connection.createStatement();
+            sql = String.format(sql,TaskStatus.Done,LocalDateTime.now(),id);
+            preparedStatement.executeUpdate(sql);
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
